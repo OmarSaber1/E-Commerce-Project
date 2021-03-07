@@ -25,7 +25,7 @@ const schema = mongoose.Schema ({
             _id : {type : String , require : true}
         },
         quantity : {
-            type : Number
+            type : Number,
         }   
     }],
     email:{
