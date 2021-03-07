@@ -182,7 +182,8 @@ try{
       console.log(userUpdate)
 }
 catch(err){
-    console.log(err)
+    console.log(err);
+    
 }
     })
 
