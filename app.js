@@ -14,8 +14,8 @@ app.use(express.json()); ////// Parse JSON BODY PARSER
 app.use(express.static(path.join(__dirname, "/")));
 
 //routes path
-app.use("/", userRouter);
-app.use("/", productRouter);
+app.use("/api/user", userRouter);
+app.use("/api/user", productRouter);
 
 
 app.use(function (req, res, next) {
