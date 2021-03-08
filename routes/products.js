@@ -6,7 +6,10 @@ const Product = require("../models/Product");
 //router
 const productRouter = new express.Router();
 
+const userRouter = require("./users");
+
 //multer
+
 const multer = require("multer");
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -27,13 +30,13 @@ var upload = multer({
 ////////////// PRODUCT AREA  /////////////
 
 //get all  products
-productRouter.get("/api/product", async (req, res) => {
+productRouter.get("/", async (req, res) => {
   const product = await Product.find({}).exec();
   res.send(product);
 });
 
 //get product by id
-productRouter.get("/api/product/:id", async (req, res) => {
+productRouter.get("/:id", async (req, res) => {
   const id = req.params.id;
   const product = await Product.findOne({ _id: id })
     .exec()
@@ -47,7 +50,7 @@ productRouter.get("/api/product/:id", async (req, res) => {
 
 //add product
 productRouter.post(
-  "/api/product",
+  "/",
   upload.single("productImage"),
   async (req, res) => {
     const { name, category, description, price, quantity, country } = req.body;
@@ -70,7 +73,7 @@ productRouter.post(
 );
 
 //delete product
-productRouter.delete("/api/product/:id", async (req, res) => {
+productRouter.delete("/:id", async (req, res) => {
   const id = req.params.id;
   const product = await Product.findOne({ _id: id })
     .exec()
@@ -85,7 +88,7 @@ productRouter.delete("/api/product/:id", async (req, res) => {
 
 //Update product
 productRouter.patch(
-  "/api/product/:id",
+  "/:id",
   upload.single("productImage"),
   async (req, res) => {
     try {
@@ -120,3 +123,4 @@ productRouter.patch(
 );
 
 module.exports = productRouter;
+
