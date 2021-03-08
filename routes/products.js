@@ -1,12 +1,12 @@
 const express = require("express");
 
 //model
-const Product = require("../models/Product");
-
+const Product = require('../models/Product')
+const User = require("../models/User");
+const Category = require('../models/Category')
 //router
 const productRouter = new express.Router();
 
-const userRouter = require("./users");
 
 //multer
 
@@ -122,5 +122,8 @@ productRouter.patch(
   }
 );
 
+
+
+            
 module.exports = productRouter;
 
