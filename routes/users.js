@@ -5,7 +5,8 @@ const jwt = require("jsonwebtoken");
 
 //model
 const User = require("../models/User");
-
+const Product = require('../models/Product')
+const Category = require('../models/Category')
 //router
 const userRouter = new express.Router();
 const bcrypt = require("bcrypt");
@@ -101,7 +102,11 @@ userRouter.get("/", async (req, res) => {
         console.log(token);
 
         if(user.role == 1 )
-        res.send(user);
+        res.send("Welcome Admin")
+        else{
+          res.send("Not Admin")
+        };
+
       } else {
         res.send("Wroing username or password");
       }
