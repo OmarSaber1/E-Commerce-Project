@@ -101,7 +101,10 @@ userRouter.get("/", async (req, res) => {
         console.log(token);
 
         if(user.role == 1 )
-        res.send(user);
+        res.send(user)
+        else{
+          res.send("Not Admin")
+        };
       } else {
         res.send("Wroing username or password");
       }
