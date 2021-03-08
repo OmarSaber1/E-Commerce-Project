@@ -34,14 +34,14 @@ var upload = multer({
 
 ///  get All Users
 
-userRouter.get("/api/user", async (req, res) => {
+userRouter.get("/", async (req, res) => {
     const users = await User.find({}).exec();
     res.send(users);
   });
 
   ///get User By id
 
-  userRouter.get("/api/user/:id", async (req, res) => {
+  userRouter.get("/:id", async (req, res) => {
     const id = req.params.id;
   
     const user = await User.findOne({ _id: id })
@@ -57,7 +57,7 @@ userRouter.get("/api/user", async (req, res) => {
   ///  User Signup
   
   userRouter.post(
-    "/api/user/signUp",
+    "/signUp",
     upload.single("productImage"),
     async (req, res) => {
       const { userName, password, email } = req.body;
@@ -82,7 +82,7 @@ userRouter.get("/api/user", async (req, res) => {
   
   //// User Login   ///////
   
-  userRouter.post("/api/user/login", async (req, res) => {
+  userRouter.post("/login", async (req, res) => {
     const { userName, password, email } = req.body;
   
     try {
@@ -99,6 +99,8 @@ userRouter.get("/api/user", async (req, res) => {
       if (isMatched) {
         const token = jwt.sign({ id: user._id }, "Potato-Man");
         console.log(token);
+
+        if(user.role == 1 )
         res.send(user);
       } else {
         res.send("Wroing username or password");
@@ -110,7 +112,7 @@ userRouter.get("/api/user", async (req, res) => {
   
   ///// User profile Token authorization//////
   
-  userRouter.post("/api/user/profile", async (req, res) => {
+  userRouter.post("/profile", async (req, res) => {
     try {
       const { authorization } = req.headers;
       const verifying = jwt.verify(authorization, "Potato-Man");
@@ -123,7 +125,7 @@ userRouter.get("/api/user", async (req, res) => {
   });
   //// Delete user
   
-  userRouter.delete("/api/user/:id", async (req, res) => {
+  userRouter.delete("/:id", async (req, res) => {
     const id = req.params.id;
   
     const user = await User.findOne({ _id: id })
@@ -139,7 +141,7 @@ userRouter.get("/api/user", async (req, res) => {
   
   ///// Order by user
   
-  userRouter.post("/api/user/order", async (req, res) => {
+  userRouter.post("/order", async (req, res) => {
     const { _id } = req.body.product;
     const { quantity } = req.body;
   
