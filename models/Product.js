@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Category = require('./Category');
 
 const schema = mongoose.Schema({
 
@@ -10,6 +11,8 @@ const schema = mongoose.Schema({
 
         type:String,
         require:true
+        // type:mongoose.Schema.Types.ObjectId,
+        // ref:Category
     },
     description :{
         type:String,
