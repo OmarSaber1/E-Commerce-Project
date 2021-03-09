@@ -62,7 +62,7 @@ userRouter.get("/", async (req, res) => {
     upload.single("productImage"),
     async (req, res) => {
       const { userName, password, email } = req.body;
-      const image = req.file.originalname;
+      const image = req.file.path;
   
       try {
         const hash = await bcrypt.hash(password, 10);
