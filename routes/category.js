@@ -35,11 +35,13 @@ categoryRouter.get("/", async (req, res) => {
 //get products by category
 categoryRouter.get("/:category", async (req, res) => {
   const category = req.params.category;
+
   console.log(req.params)
   // console.log(req.params);
   try {
     const productsByCategory = await Product.find({
       category: category
+
     }).exec();
     res.send(productsByCategory);
   } catch {
