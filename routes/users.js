@@ -31,7 +31,7 @@ var upload = multer({
 });
 
 
-//////////////////////////////      USER     AREA       ///////////////
+//////////////////////////////  Admin Control  USER  AREA       ///////////////
 
 ///  get All Users
 
@@ -55,14 +55,42 @@ userRouter.get("/", async (req, res) => {
       });
   });
   
-  ///  User Signup
+  //// Delete user
+  
+  userRouter.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+  
+    const user = await User.findOne({ _id: id })
+      .exec()
+      .then((result) => {
+        result.remove();
+        res.send("removed");
+      })
+      .catch((err) => {
+        res.send("not deleted");
+      });
+  });
+
+  // Delete All Users 
+
+  // userRouter.delete("/", async (req, res) => {
+
+  //     await User.find().remove();
+  //     let users = await User.find({}).exec();
+  //     res.send(users)
+  // });
+
+                    ////////////////////////////////////////////////
+                            // User Area
+
+      //  User Signup
   
   userRouter.post(
     "/signUp",
-    upload.single("productImage"),
+    upload.single("userImage"),
     async (req, res) => {
-      const { userName, password, email } = req.body;
-      const image = req.file.originalname;
+      const { userName, password, email , role , firstName , lastName , gender , address , phoneNumber , age} = req.body;
+      const image = req.file.path;
   
       try {
         const hash = await bcrypt.hash(password, 10);
@@ -72,6 +100,12 @@ userRouter.get("/", async (req, res) => {
           password: hash,
           email,
           image,
+          firstName,
+          lastName,
+          role,
+          gender,
+          age,
+          address
         });
         res.send(user);
       } catch (err) {
@@ -87,10 +121,14 @@ userRouter.get("/", async (req, res) => {
     const { userName, password, email } = req.body;
   
     try {
-      const user = await User.findOne({ userName }).exec();
-  
+      let user = await User.findOne({ userName }).exec();
+       
       if (!user) {
-        throw new Error("No such user found");
+         user = await User.findOne({email}).exec();
+         if(!user){
+           res.send("Wrong username or password")
+          throw new Error("No such user found");  
+         }
       }
   
       const isMatched = await bcrypt.compare(password, user.password);
@@ -104,11 +142,11 @@ userRouter.get("/", async (req, res) => {
         if(user.role == 1 )
         res.send("Welcome Admin")
         else{
-          res.send("Not Admin")
+          res.send("Welcome User")
         };
 
       } else {
-        res.send("Wroing username or password");
+        res.send("Wrong username or password");
       }
     } catch (err) {
       console.log(err);
@@ -128,21 +166,7 @@ userRouter.get("/", async (req, res) => {
       res.send("Not Authenticaed");
     }
   });
-  //// Delete user
   
-  userRouter.delete("/:id", async (req, res) => {
-    const id = req.params.id;
-  
-    const user = await User.findOne({ _id: id })
-      .exec()
-      .then((result) => {
-        result.remove();
-        res.send("removed");
-      })
-      .catch((err) => {
-        res.send("not deleted");
-      });
-  });
   
   ///// Order by user
   
@@ -151,19 +175,23 @@ userRouter.get("/", async (req, res) => {
     const { quantity } = req.body;
   
     try {
-      const order = await Product.findOne({ _id }).exec();
       const { authorization } = req.headers;
       const verifying = jwt.verify(authorization, "Potato-Man");
+
+      const order = await Product.findOne({ _id }).exec();
       const user = await User.findOne({ _id: verifying.id });
   
+       
       const userUpdate = await User.updateOne(
         { _id: user._id },
         { order: { product: order._id, quantity } },
         { upsert: true }
       );
       console.log(userUpdate);
+      res.send("ADDED ORDER SUCCESFULLY ")
     } catch (err) {
       console.log(err);
+      res.send("No ADDED  ORDER  ")
     }
   });
   

@@ -1,12 +1,11 @@
 const express = require("express");
 
 //model
-const Product = require('../models/Product')
+const Product = require("../models/Product");
 const User = require("../models/User");
-const Category = require('../models/Category')
+const Category = require("../models/Category");
 //router
 const productRouter = new express.Router();
-
 
 //multer
 
@@ -31,14 +30,15 @@ var upload = multer({
 
 //get all  products
 productRouter.get("/", async (req, res) => {
-  const product = await Product.find({}).exec();
+  const product = await Product.find().exec();
   res.send(product);
 });
 
-//get product by id
+
+// //get product by id
 productRouter.get("/:id", async (req, res) => {
   const id = req.params.id;
-  const product = await Product.findOne({ _id: id })
+  const product = await Product.findOne({ _id: id }).populate('category')
     .exec()
     .then((result) => {
       res.send(result);
@@ -49,28 +49,23 @@ productRouter.get("/:id", async (req, res) => {
 });
 
 //add product
-productRouter.post(
-  "/",
-  upload.single("productImage"),
-  async (req, res) => {
-    const { name, category, description, price, quantity, country } = req.body;
-    //console.log(image);
-    //console.log(req.file.path);
-    const image = req.file.path;
-
+productRouter.post("/", upload.single("productImage"), async (req, res) => {
+  const { name, category, description, price, quantity, country , image} = req.body;
+  //console.log(image);
+  //console.log(req.file.path);
+  // const image = req.file.path;
+    const categoryName = await Category.findOne({_id:category});
+    console.log(categoryName)
+  try{
     const product = await Product.create(
-      { name, category, description, price, quantity, country, image },
-      (err) => {
-        if (err) {
-          res.send({ messge: "Not Created" });
-        } else {
-          console.log("created successfully");
-          res.send({ messge: "Created" });
-        }
-      }
-    );
+      { name, category, description, price, quantity, country, image })
+      res.send( "product created successfully");
+    }
+    catch(err){
+      console.log(err);
+      res.send("product not Created");
   }
-);
+});
 
 //delete product
 productRouter.delete("/:id", async (req, res) => {
@@ -79,51 +74,36 @@ productRouter.delete("/:id", async (req, res) => {
     .exec()
     .then((result) => {
       result.remove();
-      res.send("removed");
+      res.send("product is deleted");
     })
     .catch((err) => {
-      res.send("not deleted");
+      res.send("product not deleted");
     });
 });
 
 //Update product
-productRouter.patch(
-  "/:id",
-  upload.single("productImage"),
-  async (req, res) => {
-    try {
-      const id = req.params.id;
-      const {
-        name,
-        category,
-        description,
-        price,
-        quantity,
-        country,
-      } = req.body;
-      const image = req.file.path;
-      const updateProduct = await Product.updateOne(
-        
-        {_id: id},{
-          name: name,
-          category: category,
-          description: description,
-          price: price,
-          quantity: quantity,
-          country: country,
-          image:image
-        }
-      ).exec();
-      res.send({ messege: "Product updated successfully" });
-    } catch {
-      res.statusCode = 422;
-      res.send({ success: false, message: "Update failed, try again" });
-    }
+productRouter.patch("/:id", upload.single("productImage"), async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, category, description, price, quantity, country } = req.body;
+    const image = req.file.path;
+    const updateProduct = await Product.updateOne(
+      { _id: id },
+      {
+        name: name,
+        category: category,
+        description: description,
+        price: price,
+        quantity: quantity,
+        country: country,
+        image: image,
+      }
+    ).exec();
+    res.send({ messege: "Product updated successfully" });
+  } catch {
+    res.statusCode = 422;
+    res.send({ success: false, message: "Update failed, try again" });
   }
-);
+});
 
-
-
-            
 module.exports = productRouter;
-

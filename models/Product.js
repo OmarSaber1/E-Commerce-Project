@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
+const Category = require('./Category');
 
 const schema = mongoose.Schema({
 
     name:{
-        type : String,
+         type : String,
         require:true
     },
     category:{
-
-        type:String,
-        require:true
+        type :String,
+        
     },
     description :{
         type:String,
