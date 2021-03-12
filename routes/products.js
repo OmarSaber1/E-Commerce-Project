@@ -30,7 +30,7 @@ var upload = multer({
 
 //get all  products
 productRouter.get("/", async (req, res) => {
-  const product = await Product.find({}).exec();
+  const product = await Product.find().exec();
   res.send(product);
 });
 
@@ -38,7 +38,7 @@ productRouter.get("/", async (req, res) => {
 // //get product by id
 productRouter.get("/:id", async (req, res) => {
   const id = req.params.id;
-  const product = await Product.findOne({ _id: id })
+  const product = await Product.findOne({ _id: id }).populate('category')
     .exec()
     .then((result) => {
       res.send(result);
@@ -50,18 +50,22 @@ productRouter.get("/:id", async (req, res) => {
 
 //add product
 productRouter.post("/", upload.single("productImage"), async (req, res) => {
-  const { name, category, description, price, quantity, country } = req.body;
+
+  const { name, category, description, price, quantity, country , image} = req.body;
   //console.log(image);
   //console.log(req.file.path);
-  const image = req.file.path;
+  // const image = req.file.path;
+    const categoryName = await Category.findOne({_id:category});
+    console.log(categoryName)
   try{
     const product = await Product.create(
-      { name, category, description, price, quantity, country, image });
-      res.send({ messge: "product created successfully",product });
+      { name, category, description, price, quantity, country, image })
+      res.send( "product created successfully");
     }
-    catch{
+    catch(err){
       console.log(err);
-      res.send({ messge: "product not Created" });
+      res.send("product not Created");
+
   }
 });
 

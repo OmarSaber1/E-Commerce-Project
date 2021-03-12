@@ -5,9 +5,11 @@ const schema = mongoose.Schema({
     
         type:String,
         require : true
-    }
-},
-{timestamps : true})
+    },
+    // product :[{
+    //     type : mongoose.Schema.Types.ObjectId , ref : 'product'
+    // }]
+},{timestamps : true})
 
 const Category = mongoose.model('Category',schema); //categories collection
 

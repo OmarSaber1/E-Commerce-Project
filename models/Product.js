@@ -4,15 +4,12 @@ const Category = require('./Category');
 const schema = mongoose.Schema({
 
     name:{
-        type : String,
+         type : String,
         require:true
     },
     category:{
+        type :String,
 
-        type:String,
-        require:true
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:Category
     },
     description :{
         type:String,
