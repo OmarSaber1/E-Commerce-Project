@@ -50,6 +50,7 @@ productRouter.get("/:id", async (req, res) => {
 
 //add product
 productRouter.post("/", upload.single("productImage"), async (req, res) => {
+
   const { name, category, description, price, quantity, country , image} = req.body;
   //console.log(image);
   //console.log(req.file.path);
@@ -64,6 +65,7 @@ productRouter.post("/", upload.single("productImage"), async (req, res) => {
     catch(err){
       console.log(err);
       res.send("product not Created");
+
   }
 });
 

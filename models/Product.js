@@ -9,7 +9,7 @@ const schema = mongoose.Schema({
     },
     category:{
         type :String,
-        
+
     },
     description :{
         type:String,

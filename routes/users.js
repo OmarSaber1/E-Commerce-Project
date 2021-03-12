@@ -91,6 +91,7 @@ userRouter.get("/", async (req, res) => {
     upload.single("userImage"),
     async (req, res) => {
       const { userName, password, email , role , firstName , lastName , gender , address , phoneNumber , age} = req.body;
+
       const image = req.file.path;
   
       try {
