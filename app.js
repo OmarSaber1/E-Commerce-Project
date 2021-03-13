@@ -11,7 +11,7 @@ const categoryRouter = require('./routes/category')
 
 app.use(express.json()); ////// Parse JSON BODY PARSER
 
-app.use(express.static(path.join(__dirname, "/")));
+app.use(express.static('public'));
 
 //routes path
 app.use("/api/user", userRouter);

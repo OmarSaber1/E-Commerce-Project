@@ -3,6 +3,7 @@ const express = require("express");
 //token
 const jwt = require("jsonwebtoken");
 
+const Authuser = require('../userAuth')
 //model
 const User = require("../models/User");
 const Product = require('../models/Product')
@@ -141,7 +142,7 @@ userRouter.get("/", async (req, res) => {
         console.log(token);
 
         if(user.role == 1 )
-        res.send("Welcome Admin")
+        res.json(token)
         else{
           res.send("Welcome User")
         };
