@@ -7,7 +7,6 @@ const Authuser = require('../userAuth')
 //model
 const User = require("../models/User");
 const Product = require('../models/Product')
-const Category = require('../models/Category')
 //router
 const userRouter = new express.Router();
 const bcrypt = require("bcrypt");

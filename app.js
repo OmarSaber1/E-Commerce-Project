@@ -7,7 +7,7 @@ const path = require("path");
 //routes required
 const userRouter = require("./routes/users");
 const productRouter = require("./routes/products");
-const categoryRouter = require('./routes/category')
+const orderRouter = require('./routes/order')
 
 app.use(express.json()); ////// Parse JSON BODY PARSER
 
@@ -16,7 +16,7 @@ app.use(express.static('public'));
 //routes path
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
-app.use('/api/category',categoryRouter)
+app.use('/api/order',orderRouter)
 
 
 app.use(function (req, res, next) {
