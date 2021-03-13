@@ -1,22 +1,31 @@
 const express = require("express"); ///Express Package
 const app = express();
+const mongoose = require('mongoose');
+var session = require('express-session')
+// const MongoStore = require('connect-mongo')
+const path = require("path");
 
 require("./db-connection");
-const path = require("path");
 
 //routes required
 const userRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const orderRouter = require('./routes/order')
+const cartRouter = require('./routes/cart')
 
-app.use(express.json()); ////// Parse JSON BODY PARSER
 
-app.use(express.static('public'));
-
+// app.use(session({
+    //     store: new MongoStore.create({ mongoUrl: mongoose.connection })
+    //   }));
+    
+    app.use(express.json()); ////// Parse JSON BODY PARSER
+    
+    app.use(express.static('public'));
 //routes path
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use('/api/order',orderRouter)
+app.use('/api/cart',cartRouter)
 
 
 app.use(function (req, res, next) {

@@ -15,6 +15,9 @@ const orderSchema = mongoose.Schema([{
                   require :true ,
                    default : 1
                 },
+                totalPrice :{
+                        
+                },
         startShippingAt : {
                  type : Date,
                  default : Date.now()
