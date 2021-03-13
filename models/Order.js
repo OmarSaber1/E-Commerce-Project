@@ -2,8 +2,24 @@ const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema([{
 
-        product : { type : mongoose.Schema.Types.ObjectId , ref : 'product'},
-        quantity : { type : Number , require :true , default : 1}
+        
+        product : {
+                 type : mongoose.Schema.Types.ObjectId , ref : 'product' ,
+                 require:true
+        },
+        quantity : {
+                 type : Number ,
+                  require :true ,
+                   default : 1
+                },
+        startShippingAt : {
+                 type : Date,
+                 default : Date.now()
+                },
+        deliveryAt :{
+                type:Date,
+                default: () => new Date(+new Date() + 7*24*60*60*1000)
+        }
 
 }])
 
