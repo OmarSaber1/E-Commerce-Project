@@ -36,11 +36,11 @@ orderRoute.get("/:id", async (req, res) => {
 
 orderRoute.post("/",async(req,res)=>{
 
-    const { productId , quantity} = req.body ;
+    const { productId , quantity ,userId} = req.body ;
     try{
         const product = await Product.findOne({_id : productId}).exec();
-        if(product){
-            const order = await Order.create({product :productId , quantity});
+        if(product && userId){
+            const order = await Order.create({userId ,productId , quantity});
             console.log("Created Successfully")
             res.status(404).json(order)
         }
