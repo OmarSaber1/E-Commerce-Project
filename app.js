@@ -2,7 +2,7 @@ const express = require("express"); ///Express Package
 const app = express();
 const mongoose = require('mongoose');
 var session = require('express-session')
-// const MongoStore = require('connect-mongo')
+const MongoStore = require('connect-mongo')
 const path = require("path");
 
 require("./db-connection");
@@ -11,13 +11,21 @@ require("./db-connection");
 const userRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const orderRouter = require('./routes/order')
-const cartRouter = require('./routes/cart')
 
-
+// ///  Express Session
 // app.use(session({
-    //     store: new MongoStore.create({ mongoUrl: mongoose.connection })
-    //   }));
-    
+//     secret: 'mysecretkey',
+//     resave: false,
+//     saveUninitialized: true,
+//     store: MongoStore.create({
+//         mongoUrl: mongoose.connection,
+//         ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+//       })    
+//   }),()=>{console.log(session.Cookie)});
+
+  
+  ///////////////////////////////
+
     app.use(express.json()); ////// Parse JSON BODY PARSER
     
     app.use(express.static('public'));
@@ -25,7 +33,6 @@ const cartRouter = require('./routes/cart')
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use('/api/order',orderRouter)
-app.use('/api/cart',cartRouter)
 
 
 app.use(function (req, res, next) {
@@ -36,6 +43,8 @@ app.use(function (req, res, next) {
     );
     next();
 });
+
+
 
 app.listen(process.env.PORT||3000, () => {
     console.log("Server is up and listen to port 3000");

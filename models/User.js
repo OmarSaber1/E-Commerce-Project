@@ -67,7 +67,6 @@ const schema = mongoose.Schema ({
         // minlength : 10,
         // maxlength : 15
     },
-
     firstName:{
         type:String,
         require:true,

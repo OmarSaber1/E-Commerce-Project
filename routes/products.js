@@ -1,5 +1,5 @@
 const express = require("express");
-
+const app = express();
 //model
 const Product = require("../models/Product");
 const User = require("../models/User");
@@ -46,6 +46,15 @@ productRouter.get("/:id", async (req, res) => {
       res.send("no Such product Exist");
     });
 });
+
+//get product by price'
+
+productRouter.get('/',(req,res)=>{
+
+  const {price} = req.body;
+  console.log(price)
+  res.send("No")
+})
 
 //add product
 productRouter.post("/", upload.single("productImage"), async (req, res) => {

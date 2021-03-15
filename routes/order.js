@@ -12,6 +12,7 @@ const Product = require('../models/Product');
 orderRoute.get('/', async (req,res)=>{
 
     const orders = await Order.find().populate('product').exec();
+    console.log(req.sess)
     res.json(orders)
 })
 
