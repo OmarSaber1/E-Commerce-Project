@@ -3,80 +3,85 @@ const express = require("express");
 //token
 const jwt = require("jsonwebtoken");
 
-const Authuser = require('../userAuth')
 //model
 const User = require("../models/User");
-const Product = require('../models/Product')
+const Product = require('../models/Product');
+
 //router
 const userRouter = new express.Router();
 const bcrypt = require("bcrypt");
 const path = require("path");
 
+// route authentication
+const checkAuth = require("../middlewares/Authentication");
+
+
 //multer
 const multer = require("multer");
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads/");
+    cb(null, "public/images-uploads/");
   },
   filename: function (req, file, cb) {
-    cb(null, /*new Date().toISOString() +*/ file.originalname);
+    cb(null, new Date().toISOString() + file.originalname);
   },
 });
 
-var upload = multer({
+const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 1024 * 1024 * 5,
-  },
+    fileSize: 1024 * 1024 * 5
+  }
 });
 
 
-//////////////////////////////  Admin Control  USER  AREA       ///////////////
+/////////////////////////////*******Admin Control  USER  AREA********///////////////
 
-///  get All Users
-
-userRouter.get("/", async (req, res) => {
+/// get All Users
+userRouter.get("/",checkAuth, async (req, res) => {
+  try {
     const users = await User.find({}).exec();
     res.send(users);
+    
+  } catch (error) {
+    console.log(error);
+    res.send({message:"No users available"});
+
+  }
   });
 
   ///get User By id
-
-  userRouter.get("/:id", async (req, res) => {
-    const id = req.params.id;
-  
-    const user = await User.findOne({ _id: id })
-      .exec()
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => {
-        res.send("no Such User Exist");
-      });
+  userRouter.get("/:id",checkAuth, async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findOne({ _id: id }).exec()
+      res.send(user);
+      
+    } catch (error) {
+      
+      res.send({message:"No Such User Exists"});
+    }
   });
   
   //// Delete user
   
-  userRouter.delete("/:id", async (req, res) => {
-    const id = req.params.id;
-  
-    const user = await User.findOne({ _id: id })
-      .exec()
-      .then((result) => {
-        result.remove();
-        res.send("removed");
-      })
-      .catch((err) => {
-        res.send("not deleted");
-      });
+  userRouter.delete("/:id",checkAuth, async (req, res) => {
+    try {
+      const id = req.params.id;
+      const user = await User.findOne({ _id: id }).remove().exec();
+      res.send({message:"User is removed"});
+      
+    } catch (error) {
+      console.log(error);
+      res.statusCode = 401;
+      res.send("not deleted");
+    } 
   });
 
-  // Delete All Users 
+  // //Delete All Users 
+  // userRouter.delete("/",checkAuth, async (req, res) => {
 
-  // userRouter.delete("/", async (req, res) => {
-
-  //     await User.find().remove();
-  //     let users = await User.find({}).exec();
+  //       const users = await User.find({}).remove().exec();
   //     res.send(users)
   // });
 
@@ -90,7 +95,6 @@ userRouter.get("/", async (req, res) => {
     upload.single("userImage"),
     async (req, res) => {
       const { userName, password, email , role , firstName , lastName , gender , address , phoneNumber , age} = req.body;
-
       const image = req.file.path;
   
       try {
@@ -100,50 +104,54 @@ userRouter.get("/", async (req, res) => {
           userName,
           password: hash,
           email,
-          image,
+          role,
           firstName,
           lastName,
-          role,
           gender,
+          address,
+          phoneNumber,
           age,
-          address
+          image
         });
+
         res.send(user);
+
       } catch (err) {
         console.log(err);
-        res.send("not created");
+        res.send({message:"User was not created"});
       }
     }
   );
   
-  //// User Login   ///////
+  ////*****User Login********///////
   
   userRouter.post("/login", async (req, res) => {
-    const { userName, password, email } = req.body;
+    const { userName, password } = req.body;
   
     try {
       let user = await User.findOne({ userName }).exec();
        
       if (!user) {
-         user = await User.findOne({email}).exec();
-         if(!user){
-           res.send("Wrong username or password")
+           res.send("Wrong username or password");
           throw new Error("No such user found");  
          }
-      }
-  
+      
       const isMatched = await bcrypt.compare(password, user.password);
   
       console.log(isMatched);
   
       if (isMatched) {
+        
+        //Generate token 
         const token = jwt.sign({ id: user._id }, "Potato-Man");
-        console.log(token);
-
-        if(user.role == 1 )
-        res.json(token)
-        else{
-          res.send("Welcome User")
+        // console.log(token);
+        // res.json(token);
+        if(user.role == 1 ){
+          // res.json(token);
+          res.send({message:"Welcome Admin",token});
+        }
+         else{
+          res.send({message:"Welcome User",token});
         };
 
       } else {
@@ -151,36 +159,35 @@ userRouter.get("/", async (req, res) => {
       }
     } catch (err) {
       console.log(err);
+      res.json({ status: false, message: "User failed to log in to his account" });
+
     }
   });
   
   ///// User profile Token authorization//////
   
-  userRouter.post("/profile", async (req, res) => {
+  userRouter.post("/profile",checkAuth, async (req, res) => {
     try {
-      const { authorization } = req.headers;
-      const verifying = jwt.verify(authorization, "Potato-Man");
-      const user = await User.findOne({ _id: verifying.id });
+      const user = await User.findOne({ _id: req.signedData.id });
+      console.log(req.signedData);
   
       res.send(user);
     } catch (err) {
-      res.send("Not Authenticaed");
+      res.send("Not Authenticated");
     }
   });
   
   
   ///// Order by user
   
-  userRouter.post("/order", async (req, res) => {
+  userRouter.post("/order",checkAuth, async (req, res) => {
     const { _id } = req.body.product;
     const { quantity } = req.body;
   
     try {
-      const { authorization } = req.headers;
-      const verifying = jwt.verify(authorization, "Potato-Man");
 
       const order = await Product.findOne({ _id }).exec();
-      const user = await User.findOne({ _id: verifying.id });
+      const user = await User.findOne({ _id: req.signedData.id });
   
        
       const userUpdate = await User.updateOne(
@@ -192,7 +199,7 @@ userRouter.get("/", async (req, res) => {
       res.send("ADDED ORDER SUCCESFULLY ")
     } catch (err) {
       console.log(err);
-      res.send("No ADDED  ORDER  ")
+      res.send("ORDER IS NOT ADDED ")
     }
   });
   

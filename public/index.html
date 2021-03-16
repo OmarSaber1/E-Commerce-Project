@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <form action="">
         <label for="">userName </label>
@@ -15,41 +17,87 @@
         <button type="submit">Submit</button>
     </form>
     <div id="mydiv"></div>
+
+    <!-- adding product images -->
+    <div id="btn-product">
+        <button>View Products Images</button>
+    </div>
+    <div id="img-product"></div>
     <script>
         let form = document.getElementsByTagName('form')[0];
         let submitButton = document.getElementsByTagName('button')[0];
         let mydiv = document.getElementById('mydiv');
 
-        form.addEventListener('submit',async(e)=>{
+
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault()
-           let username = e.target.elements.username.value;
-           let password = e.target.elements.password.value;
-            try{
+            let username = e.target.elements.username.value;
+            let password = e.target.elements.password.value;
+            try {
                 var myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Content-Type", "application/json");
 
-        var raw = JSON.stringify({userName : username,password});
+                var raw = JSON.stringify({ userName: username, password });
 
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
 
-      let token =   await fetch("http://localhost:3000/api/user/login", requestOptions)
-      .then(response =>response.json())
-      
-    
-   mydiv.innerHTML = token;
-        
-   localStorage.setItem('token',token)
+                let token = await fetch("http://localhost:3000/api/user/login", requestOptions)
+                    .then(response => response.json())
+
+
+                mydiv.innerHTML = token;
+
+                localStorage.setItem('token', token)
 
             }
-                catch(err){
-                    console.log(err)
-                }
+            catch (err) {
+                console.log(err)
+            }
+        })
+
+        /* view product images *****************/
+        let btn = document.getElementById("btn-product");
+        let imgContainer = document.getElementById("img-product");
+        btn.addEventListener("click", async (e) => {
+
+            var requestOptions = {
+                method: 'GET',
+                redirect: 'follow'
+            };
+
+            const product = await fetch("http://localhost:3000/api/product", requestOptions)
+                .then(response => response.json());
+            console.log(product);
+
+
+            product.forEach((element, index) => {
+                // console.log(product[index].image);
+
+                let str = `${product[index].image}`;
+                console.log(str);
+                let imgRealPath = str.replace('public', '');
+                console.log(imgRealPath);
+
+
+                const img = document.createElement("img");
+                img.setAttribute("src", `http://localhost:3000/${imgRealPath}`);
+                img.setAttribute("width", "200px");
+                img.setAttribute("height", "200px");
+                img.setAttribute("background-size", "cover");
+                img.setAttribute("display", "block");
+                imgContainer.appendChild(img);
+
+
+            });
+
         })
     </script>
 </body>
+
 </html>

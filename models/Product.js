@@ -8,6 +8,7 @@ const schema = mongoose.Schema({
     },
     category:{
         type :String,
+        require:true
 
     },
     description :{
@@ -33,7 +34,7 @@ const schema = mongoose.Schema({
 },{timestamps : true})
 
 
-const product = mongoose.model('product',schema)
+const Product = mongoose.model('Product',schema)  //products collection
 
 
-module.exports = product;
+module.exports = Product;

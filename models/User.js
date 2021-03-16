@@ -1,36 +1,36 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema ({
-
+    
     userName:{
         type:String,
-        // minlength :3,
-        // maxlength :8,
         require:true,
         unique : true
     },
-
+    
     password:{
         type:String,
-        require:true,
-        // minlength : 8,
-        // maxlength : 15
+        require:true
+        
     },   
-
+    firstName:{
+        type:String,
+        require:true, 
+    
+    },
+    lastName:{
+        type:String,
+        require:true,
+     
+    },
     role:{                      /// Admin or user 
         type:String,
-        default:0,
-        // enum : [ "0" , "1" ]
+        default:0
     },
-
-    image :{
-        type: String,
-        require : true,
-    },
-
-    order:[{
+    
+    order:[  {
         product :{
-            type : mongoose.Schema.Types.ObjectId , ref : 'product',
+            type : mongoose.Schema.Types.ObjectId , ref : 'Product',
             require : true
         },
         quantity : {
@@ -38,47 +38,33 @@ const schema = mongoose.Schema ({
             require : true
         }   
     },{timestamps:true}],
-
+    
     email:{
         type:String,
         require : true,
         unique:true,
-        // maxlength : 20
     },
-
+    
     gender:{
-        type: String,
-        require : true,
-        // enum : ["m","f"]
-    },
-
-    age:{
-        type :Number,
-        // min : 10,
-        // max : 100
-    },
-
-    address:{
         type: String
     },
-
+    
+    age:{
+        type :Number
+      
+    },
+    
+    address:{
+        type: String,
+        require: true
+    },
+    
     phoneNumber:{
-        type:String,
-        // minlength : 10,
-        // maxlength : 15
-    },
-    firstName:{
-        type:String,
-        require:true,
-        // minlength : 3 ,
-        // maxlength : 8
+        type:String
     },
 
-    lastName:{
-        type:String,
-        require:true,
-        // minlength : 3 ,
-        // maxlength : 8
+    image :{
+        type: String
     }
 
 },{timestamps:true})

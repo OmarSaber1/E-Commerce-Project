@@ -6,22 +6,27 @@ const orderSchema = mongoose.Schema([{
                 type : mongoose.Schema.Types.ObjectId , ref : 'User' ,
                 require:true
        },
+
         productId : {
-                 type : mongoose.Schema.Types.ObjectId , ref : 'product' ,
+                 type : mongoose.Schema.Types.ObjectId , ref : 'Product' , 
                  require:true
         },
+        
         quantity : {
                  type : Number ,
                   require :true ,
                    default : 1
                 },
-                totalPrice :{
-                        
+
+         totalPrice :{
+                        type: Number
                 },
+
         startShippingAt : {
                  type : Date,
                  default : Date.now()
                 },
+                
         deliveryAt :{
                 type:Date,
                 default: () => new Date(+new Date() + 7*24*60*60*1000)
@@ -29,6 +34,6 @@ const orderSchema = mongoose.Schema([{
 
 }])
 
-const order = mongoose.model('order',orderSchema);
+const Order = mongoose.model('Order',orderSchema);
 
-module.exports = order;
+module.exports = Order;
