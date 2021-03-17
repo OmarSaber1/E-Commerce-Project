@@ -41,10 +41,13 @@ orderRoute.post("/",/* checkAuth, */ async(req,res)=>{
         // let a = (products)?length:""; 
         // const product = await Product.findOne({_id : productId}).exec();
         //old product
+        console.log(products);
+        let totalPrice = 0;
             for(let i = 0 ; i < products.length ; i++ ){
 
                 let product = await Product.findOne({_id : products[i].productId}); //ordered
                 let id = product._id;
+                totalPrice += product.price * products[i].quantity
                 let oldQuantity = product.quantity;
                 if(oldQuantity - products[i].quantity < 0){
                    return res.send(`${products[i].productId} is sold out we have only ${oldQuantity}`)
@@ -52,7 +55,7 @@ orderRoute.post("/",/* checkAuth, */ async(req,res)=>{
                 await Product.updateOne({_id :id} , {quantity : oldQuantity-products[i].quantity })                
             }
 
-            let order = await Order.create({userId ,products});
+            let order = await Order.create({userId ,products,totalPrice});
             console.log("Created Successfully");
             res.status(200).json(order);
     }
@@ -65,6 +68,23 @@ orderRoute.post("/",/* checkAuth, */ async(req,res)=>{
     }
 })
 
+//edit status of shippment
+
+orderRoute.put("/:id",/* checkAuth, */ async (req, res) => {
+    const id = req.params.id;
+    const {status} = req.body;
+    try {
+        const order = await Order.findOneAndUpdate({ _id: id },{status});
+         res.status(200).json(order);
+        
+    } catch (error) {
+        res.status(404).json({
+               message :"Order is not deleted",
+               error :err
+            } );
+    }
+
+  });
 
 //delete order
 

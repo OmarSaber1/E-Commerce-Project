@@ -29,7 +29,9 @@ const orderSchema = mongoose.Schema([
       enum: ["ordered", "orderPickedUp", "orderDelivering", "orderDelivered"],
       default: "ordered",
     },
-    totalPrice: {},
+    totalPrice: {
+      type : Number
+    },
     startShippingAt: {
       type: Date,
       default: Date.now(),
