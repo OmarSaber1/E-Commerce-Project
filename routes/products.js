@@ -6,7 +6,8 @@ const User = require("../models/User");
 //router
 const productRouter = new express.Router();
 
-const checkAuth = require("../middlewares/Authentication");
+const {authAdmin} = require("../middlewares/Authentication");
+
 
 //multer
 const multer = require("multer");
@@ -51,7 +52,7 @@ productRouter.get("/:id", async (req, res) => {
 
 
 //add product
-productRouter.post("/", checkAuth,   upload.single("productImage"), async (req, res) => {
+productRouter.post("/", authAdmin,   upload.single("productImage"), async (req, res) => {
   try{ 
   const { name, category, description, price, quantity, country} =  req.body;
   console.log(req.body.name);
@@ -72,7 +73,7 @@ productRouter.post("/", checkAuth,   upload.single("productImage"), async (req, 
 });
 
 //delete product
-productRouter.delete("/:id",checkAuth, async (req, res) => {
+productRouter.delete("/:id",authAdmin, async (req, res) => {
   try {
     const id = req.params.id;
     const product = await Product.findOne({ _id: id }).remove().exec();
@@ -86,25 +87,21 @@ productRouter.delete("/:id",checkAuth, async (req, res) => {
 });
 
 //Update product
-productRouter.patch("/:id",checkAuth, upload.single("productImage"), async (req, res) => {
+productRouter.patch("/:id",authAdmin, async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, category, description, price, quantity, country } = req.body;
-    const image = req.file.path;
+    const { price, quantity } = req.body;
+   
     const updatedProduct = await Product.updateOne(
       { _id: id },
       {
-        name: name,
-        category: category,
-        description: description,
         price: price,
-        quantity: quantity,
-        country: country,
-        image: image
+        quantity: quantity
       }
     ).exec();
     res.send({ messege: "Product updated successfully"});
   } catch {
+    console.log(err)
     res.statusCode = 422;
     res.send({ status: false, message: "Update failed, try again" });
   }
