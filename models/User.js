@@ -1,63 +1,57 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema ({
-
+    
     userName:{
         type:String,
         require:true,
         unique : true
     },
+    
     password:{
         type:String,
         require:true
-    },     
-    role:{                      /// Admin or user 
-        type:Number,
-        default:0,
-        require:true
+        
+    },   
+    firstName:{
+        type:String,
+        require:true, 
+    
     },
-    image :{
-        type: String,
-        require : true,
+
+    image:
+    {
+       type:String
     },
-    order:[{
-        product :{
-            _id : {type : String , require : true}
-        },
-        quantity : {
-            type : Number,
-        }   
-    }],
+
     email:{
         type:String,
         require : true,
-        unique:true
+        unique:true,
     },
+    
     gender:{
-        type: String,
-        require : true
+
+        type: String
+
     },
-    birthDate:{
-        type: Date
+    
+    age:{
+        type :Number
+      
     },
+    
     address:{
-        city:{
-            type: String
-        },
-        street:{
-            type:String
-        }
+        type: String,
+        require: true
     },
+    
     phoneNumber:{
         type:String
     },
-    firstName:{
-        type:String,
-        require:true
-    },
-    lastName:{
-        type:String,
-        require:true
+
+    image :{
+        type: String
     }
 
 },{timestamps:true})

@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema({
 
     name:{
-        type : String,
+         type : String,
         require:true
     },
     category:{
-
-        type:String,
+        type :String,
         require:true
+
     },
     description :{
         type:String,
@@ -31,10 +31,10 @@ const schema = mongoose.Schema({
         type:String,
         require:true
     }
-})
+},{timestamps : true})
 
 
-const product = mongoose.model('product',schema)
+const Product = mongoose.model('Product',schema)  //products collection
 
 
-module.exports = product;
+module.exports = Product;
