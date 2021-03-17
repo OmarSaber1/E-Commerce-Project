@@ -12,7 +12,7 @@ const userRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const orderRouter = require('./routes/order');
 
-app.use(express.json()); ////// Parse JSON BODY PARSER
+app.use(express.json()); ////// Parse JSON BODY PARSER 
     
 app.use(express.static('public'));
 app.use(function (req, res, next) {
