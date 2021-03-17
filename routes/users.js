@@ -3,7 +3,6 @@ var fs = require("fs");
 
 //token
 const jwt = require("jsonwebtoken");
-const Authuser = require("../userAuth");
 
 //model
 
@@ -123,6 +122,7 @@ userRouter.post("/signUp", upload.single("userImage"), async (req, res) => {
     age ,
     image
     });
+    console.log("Created")
     res.send(user);
   } catch (err) {
     console.log(err);

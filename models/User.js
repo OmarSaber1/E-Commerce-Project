@@ -36,7 +36,6 @@ const schema = mongoose.Schema ({
     gender:{
         type: String,
         require : true,
-        // enum : ["m","f"]
     },
 
     age:{
