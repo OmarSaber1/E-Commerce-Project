@@ -9,6 +9,7 @@ require("./db-connection");
 //routes required
 const userRouter = require("./routes/users");
 const productRouter = require("./routes/products");
+
 const orderRouter = require("./routes/order");
 
 ///////////////////////////////
@@ -21,6 +22,10 @@ app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/order", orderRouter);
 
+
+app.use(express.json()); ////// Parse JSON BODY PARSER 
+    
+app.use(express.static('public'));
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -29,6 +34,12 @@ app.use(function (req, res, next) {
   );
   next();
 });
+//routes path
+app.use("/api/user", userRouter);
+app.use("/api/product", productRouter);
+app.use('/api/order',orderRouter);
+
+
 
 
 const multer = require("multer");

@@ -1,70 +1,57 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema ({
-
+    
     userName:{
         type:String,
-        // minlength :3,
-        // maxlength :8,
         require:true,
         unique : true
     },
-
+    
     password:{
         type:String,
-        require:true,
-        // minlength : 8,
-        // maxlength : 15
+        require:true
+        
     },   
-
-    role:{                      /// Admin or user 
+    firstName:{
         type:String,
-        default:0,
-        // enum : [ "0" , "1" ]
+        require:true, 
+    
     },
+
     image:
     {
        type:String
     },
+
     email:{
         type:String,
         require : true,
         unique:true,
-        // maxlength : 20
     },
-
+    
     gender:{
-        type: String,
-        require : true,
-    },
 
-    age:{
-        type :Number,
-        // min : 10,
-        // max : 100
-    },
-
-    address:{
         type: String
-    },
 
+    },
+    
+    age:{
+        type :Number
+      
+    },
+    
+    address:{
+        type: String,
+        require: true
+    },
+    
     phoneNumber:{
-        type:String,
-        // minlength : 10,
-        // maxlength : 15
-    },
-    firstName:{
-        type:String,
-        require:true,
-        // minlength : 3 ,
-        // maxlength : 8
+        type:String
     },
 
-    lastName:{
-        type:String,
-        require:true,
-        // minlength : 3 ,
-        // maxlength : 8
+    image :{
+        type: String
     }
 
 },{timestamps:true})
