@@ -37,8 +37,9 @@ orderRoute.get("/:id", async (req, res) => {
 
 orderRoute.post("/",async(req,res)=>{
 
-    const { productId , quantity ,userId} = req.body ;
+    const {products=[] ,userId=""} = req.body ;// {products, userId}
     try{
+        let a = (products)?length:""; 
         const product = await Product.findOne({_id : productId}).exec();
         if(product && userId){
             const order = await Order.create({userId ,productId , quantity});

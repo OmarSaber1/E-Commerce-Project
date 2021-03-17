@@ -22,23 +22,10 @@ const schema = mongoose.Schema ({
         default:0,
         // enum : [ "0" , "1" ]
     },
-
-    image :{
-        type: String,
-        require : true,
+    image:
+    {
+       type:String
     },
-
-    order:[{
-        product :{
-            type : mongoose.Schema.Types.ObjectId , ref : 'product',
-            require : true
-        },
-        quantity : {
-            type : Number,
-            require : true
-        }   
-    },{timestamps:true}],
-
     email:{
         type:String,
         require : true,

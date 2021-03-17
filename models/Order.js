@@ -1,34 +1,45 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const orderSchema = mongoose.Schema([{
-
-        userId : {
-                type : mongoose.Schema.Types.ObjectId , ref : 'User' ,
-                require:true
-       },
-        productId : {
-                 type : mongoose.Schema.Types.ObjectId , ref : 'product' ,
-                 require:true
+const orderSchema = mongoose.Schema([
+  {
+    //  connect to user
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      require: true,
+    },
+    // connect to  product
+    products: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "product",
+          require: true,
         },
-        quantity : {
-                 type : Number ,
-                  require :true ,
-                   default : 1
-                },
-                totalPrice :{
-                        
-                },
-        startShippingAt : {
-                 type : Date,
-                 default : Date.now()
-                },
-        deliveryAt :{
-                type:Date,
-                default: () => new Date(+new Date() + 7*24*60*60*1000)
-        }
+        quantity: {
+          type: Number,
+          require: true,
+          default: 1,
+        },
+      },
+    ],
+    status: {
+      type: String,
+      enum: ["ordered", "orderPickedUp", "orderDelivering", "orderDelivered"],
+      default: "ordered",
+    },
+    totalPrice: {},
+    startShippingAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    deliveryAt: {
+      type: Date,
+      default: () => new Date(+new Date() + 7 * 24 * 60 * 60 * 1000),
+    },
+  },
+]);
 
-}])
-
-const order = mongoose.model('order',orderSchema);
+const order = mongoose.model("order", orderSchema);
 
 module.exports = order;

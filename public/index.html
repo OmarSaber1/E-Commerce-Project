@@ -1,55 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <form action="">
-        <label for="">userName </label>
-        <input name="username" type="text">
-        <label for=""> Password</label>
-        <input name="password" type="password">
-        <button type="submit">Submit</button>
+      <label for="">userName </label>
+      <input name="username" type="text" />
+      <label for=""> Password</label>
+      <input name="password" type="password" />
+      <button type="submit">Submit</button>
     </form>
     <div id="mydiv"></div>
+    <img id="myimg" src="" alt="" />
     <script>
-        let form = document.getElementsByTagName('form')[0];
-        let submitButton = document.getElementsByTagName('button')[0];
-        let mydiv = document.getElementById('mydiv');
+      let form = document.getElementsByTagName("form")[0];
+      let submitButton = document.getElementsByTagName("button")[0];
+      let img = document.getElementById("myimg");
 
-        form.addEventListener('submit',async(e)=>{
-            e.preventDefault()
-           let username = e.target.elements.username.value;
-           let password = e.target.elements.password.value;
-            try{
-                var myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        let userName = e.target.elements.username.value;
+        let password = e.target.elements.password.value;
+        var raw = JSON.stringify({ userName, password });
 
-        var raw = JSON.stringify({userName : username,password});
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: "follow",
+        };
 
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
+        let user = await fetch(
+          "http://localhost:3000/api/user/login",
+          requestOptions
+        ).then((response) => response.json());
 
-      let token =   await fetch("http://localhost:3000/api/user/login", requestOptions)
-      .then(response =>response.json())
-      
-    
-   mydiv.innerHTML = token;
-        
-   localStorage.setItem('token',token)
-
-            }
-                catch(err){
-                    console.log(err)
-                }
-        })
+        console.log(user.firstName);
+        console.log(user.image);
+        let userimage = user.image.slice(15);
+        console.log(userimage);
+        img.src = userimage;
+      });
     </script>
-</body>
+  </body>
 </html>
