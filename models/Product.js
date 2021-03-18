@@ -4,15 +4,12 @@ const Category = require('./Category');
 const schema = mongoose.Schema({
 
     name:{
-        type : String,
+         type : String,
         require:true
     },
     category:{
-
-        type:String,
+        type :String,
         require:true
-        // type:mongoose.Schema.Types.ObjectId,
-        // ref:Category
     },
     description :{
         type:String,
@@ -32,12 +29,13 @@ const schema = mongoose.Schema({
     },
     image:{
         type:String,
-        require:true
+        require:true,
+        default:""
     }
 },{timestamps : true})
 
 
-const product = mongoose.model('product',schema)
+const Product = mongoose.model('Product',schema)  //products collection
 
 
-module.exports = product;
+module.exports = Product;
