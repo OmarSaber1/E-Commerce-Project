@@ -9,7 +9,8 @@ const orderSchema = mongoose.Schema([
       ref: "User",
       require: true,
     },
-    // connect to  product
+    
+    // connect to product
     products: [
       {
         productId: {
@@ -24,18 +25,22 @@ const orderSchema = mongoose.Schema([
         }
       },
     ],
+
     status: {
       type: String,
       enum: ["ordered", "orderPickedUp", "orderDelivering", "orderDelivered"],
-      default: "ordered",
+      default: "ordered"
     },
+
     totalPrice: {
       type : Number
     },
+
     startShippingAt: {
       type: Date,
       default: Date.now(),
     },
+    
     deliveryAt: {
       type: Date,
       default: () => new Date(+new Date() + 7 * 24 * 60 * 60 * 1000),

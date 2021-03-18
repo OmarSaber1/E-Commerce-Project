@@ -1,28 +1,24 @@
 const express = require("express");
-var fs = require("fs");
-
+// route authentication
 const {authenticate , authAdmin} = require("../middlewares/Authentication");
 //token
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 //model
-
 const User = require("../models/User");
-
 const Product = require("../models/Product");
 
 //router
 const userRouter = new express.Router();
 const bcrypt = require("bcrypt");
-const path = require("path");
 
-// route authentication
 
 //multer
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads");
+    cb(null, "public/uploads/userImages");
   },
   filename: function (req, file, cb) {
     cb(null, new Date().toDateString() + file.originalname);
@@ -32,7 +28,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 1024 * 50
   },
 });
 
@@ -81,10 +77,9 @@ userRouter.delete("/:id" ,authAdmin, async (req, res) => {
 //     res.send(users)
 // });
 
-////////////////////////////////////////////////
-// User Area
 
-//  User Signup
+// User Area*******
+// User Signup
 
 userRouter.post("/signUp",upload.single("userImage"), async (req, res) => {
   const {
@@ -99,7 +94,12 @@ userRouter.post("/signUp",upload.single("userImage"), async (req, res) => {
     phoneNumber,
     age,
   } = req.body;
-  const image = req.file.path;
+
+  if (!req.body) return res.send('Please Enter product data');
+  if (!req.file) return res.send('Please upload a file');
+  
+  const image = req.file.filename;
+
 
   try {
     const hash = await bcrypt.hash(password, 10);
@@ -161,12 +161,12 @@ userRouter.post("/login", async (req, res) => {
     console.log(err);
     res.json({
       status: false,
-      message: "User failed to log in to his account",
+      message: "log in failed"
     });
   }
 });
 
-///// User profile Token authorization//////
+///// User profile //////
 
 userRouter.post("/userprofile", authenticate, async (req, res) => {
   try {
@@ -180,7 +180,6 @@ userRouter.post("/userprofile", authenticate, async (req, res) => {
 });
 
 //// Admin Profile 
-
 
 userRouter.post("/adminDashBoard", authenticate,authAdmin, async (req, res) => {
   try {

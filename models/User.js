@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema ({
+   
+    //reqiured fields ==> userName password firstName lastName email address
     
     userName:{
         type:String,
@@ -13,15 +15,22 @@ const schema = mongoose.Schema ({
         require:true
         
     },   
+
     firstName:{
         type:String,
         require:true, 
     
     },
+  
+    lastName:{
+        type:String,
+        require:true, 
+    
+    },
 
-    image:
-    {
+    image:{
        type:String
+       
     },
 
     email:{
@@ -45,16 +54,14 @@ const schema = mongoose.Schema ({
         type: String,
         require: true
     },
+
     role :{
         type : Number,
         default : 0
     },
+
     phoneNumber:{
         type:String
-    },
-
-    image :{
-        type: String
     }
 
 },{timestamps:true})

@@ -29,7 +29,8 @@ const schema = mongoose.Schema({
     },
     image:{
         type:String,
-        require:true
+        require:true,
+        default:""
     }
 },{timestamps : true})
 
