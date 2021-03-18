@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const schema = mongoose.Schema ({
    
-    //reqiured fields ==> userName password firstName lastName email address
     
     userName:{
         type:String,
